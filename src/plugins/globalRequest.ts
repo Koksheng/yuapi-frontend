@@ -10,14 +10,21 @@ const request = extend({
  * 所以请求拦截器
  */
 request.interceptors.request.use((url,options): any=> {
-    console.log(`do request url ${url}`)
+    console.log(`do request url ${url}`);
+    const token = localStorage.getItem('jwtToken');
+
+    console.log(`do request token ${token}`);
+    const headers = {
+        ...options.headers,
+        Authorization: token ? `Bearer ${token}` : undefined,
+    };
+    console.log(`do request headers ${headers}`);
+
     return {
         url,
         options: {
             ...options,
-            headers: {
-
-            },
+            headers,
         },
     };
 });

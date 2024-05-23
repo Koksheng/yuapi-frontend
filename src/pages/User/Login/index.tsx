@@ -22,6 +22,7 @@ import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { SYSTEM_LOGO } from '@/constants';
 import Settings from '../../../../config/defaultSettings';
+import { ignore } from 'antd/es/theme/useToken';
 // import { Divider } from 'rc-menu';
 const useStyles = createStyles(({ token }) => {
   return {
@@ -112,6 +113,15 @@ const Login: React.FC = () => {
       });
       // if (res.code===0 ) {
       if (res) {
+        console.log("here res",res);
+
+        // Assuming the token is in the response data
+        //@ts-ignore
+        const token = res.token;
+        console.log("here token",token);
+        // Store the token
+        localStorage.setItem('jwtToken', token);
+
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
