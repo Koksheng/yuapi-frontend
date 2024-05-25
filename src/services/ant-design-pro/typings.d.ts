@@ -6,7 +6,7 @@ declare namespace API {
     id: number;
     userName: string; // == username == normalizedUserName
     userAccount: string; // == userAccount == userName
-    avatarUrl?: string;
+    userAvatar?: string; // avatarUrl
     gender: number;
     phone: string;
     email: string;
