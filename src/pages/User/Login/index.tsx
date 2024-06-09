@@ -23,6 +23,8 @@ import { flushSync } from 'react-dom';
 import { SYSTEM_LOGO } from '@/constants';
 import Settings from '../../../../config/defaultSettings';
 import { ignore } from 'antd/es/theme/useToken';
+import { postUserUserLogin } from '@/services/yuapi-backend/user';
+import { loginUser } from '@/services/swagger/user';
 // import { Divider } from 'rc-menu';
 const useStyles = createStyles(({ token }) => {
   return {
@@ -88,56 +90,77 @@ const LoginMessage: React.FC<{
   );
 };
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  // const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [userLoginState, setUserLoginState] = useState<API.UserSafetyResponse>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
-    }
-  };
-  const handleSubmit = async (values: API.LoginParams) => {
+  // const fetchUserInfo = async () => {
+  //   const userInfo = await initialState?.fetchUserInfo?.();
+  //   if (userInfo) {
+  //     flushSync(() => {
+  //       setInitialState((s) => ({
+  //         ...s,
+  //         currentUser: userInfo,
+  //       }));
+  //     });
+  //   }
+  // };
+  // const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
       // 登录
-      console.log("here login");
-      const res = await login({
+      // const res = await login({
+      const res = await postUserUserLogin({
         ...values,
-        // type,
       });
-      // if (res.code===0 ) {
-      if (res) {
-        console.log("here res",res);
+      if (res.data) {
+        
+        setInitialState({
+          loginUser: res.data
+        });
 
-        // Assuming the token is in the response data
-        //@ts-ignore
-        const token = res.token;
-        console.log("here token",token);
-        // Store the token
-        localStorage.setItem('jwtToken', token);
-
-        const defaultLoginSuccessMessage = '登录成功！';
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
+        // Delay execution to ensure state is updated before checking it
+        setTimeout(() => {
+          console.log("here login res.data",res.data);
+          const urlParams = new URL(window.location.href).searchParams;
+          history.push(urlParams.get('redirect') || '/');
+          console.log("here login loginUser",initialState?.loginUser);
+        }, 0);
         return;
       }
-      // console.log(res.data);
-      // 如果失败去设置用户错误信息
-      // setUserLoginState(res.data);
-      setUserLoginState(res);
+      
+
+
+
+
+    //   if (res) {
+    //     console.log("here res",res);
+
+    //     // Assuming the token is in the response data
+    //     //@ts-ignore
+    //     const token = res.token;
+    //     console.log("here token",token);
+    //     // Store the token
+    //     localStorage.setItem('jwtToken', token);
+
+    //     const defaultLoginSuccessMessage = '登录成功！';
+    //     message.success(defaultLoginSuccessMessage);
+    //     await fetchUserInfo();
+    //     const urlParams = new URL(window.location.href).searchParams;
+    //     history.push(urlParams.get('redirect') || '/');
+    //     return;
+    //   }
+    //   // console.log(res.data);
+    //   // 如果失败去设置用户错误信息
+    //   // setUserLoginState(res.data);
+    //   setUserLoginState(res);
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
     }
+
   };
   const { status, type: loginType } = userLoginState;
   return (
@@ -168,7 +191,8 @@ const Login: React.FC = () => {
           }}
           // actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            // await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as API.UserLoginRequest);
           }}
         >
           <Tabs

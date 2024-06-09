@@ -6,7 +6,8 @@ import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import { errorConfig } from './requestErrorConfig';
+import { requestConfig } from './requestConfig';
+import { getUserGetCurrentUser } from './services/yuapi-backend/user';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 /**
@@ -17,46 +18,56 @@ const NO_NEED_LOGIN_WHITE_LIST = ['/user/register', loginPath];
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
-export async function getInitialState(): Promise<{
-  settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
-  loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
-}> {
-  const fetchUserInfo = async () => {
-    try {
-      // const user = await queryCurrentUser({
-      //   skipErrorHandler: true,
-      // });
-      // return user;
-      const res = await queryCurrentUser({
-        // return await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-      // return res.data;
-      return res;
-    } catch (error) {
-      history.push(loginPath);
-    }
-    return undefined;
-  };
-  // 如果是无需登录页面，不执行
-  const { location } = history;
-  if (NO_NEED_LOGIN_WHITE_LIST.includes(location.pathname)) {
-    return {
-      // @ts-ignore
-      fetchUserInfo,
-      settings: defaultSettings as Partial<LayoutSettings>,
-    };
+export async function getInitialState(): Promise<InitialState> {
+  // 当页面首次加载，获取全局信息，比如用户登录态
+  const state: InitialState = {
+    loginUser: undefined,
   }
-  const currentUser = await fetchUserInfo();
-  return {
-    //@ts-ignore
-    fetchUserInfo,
-    //@ts-ignore
-    currentUser,
-    settings: defaultSettings as Partial<LayoutSettings>,
-  };
+  try {
+    const res = await getUserGetCurrentUser();
+    console.log("getUserGetCurrentUser",res);
+    if(res.data){
+      state.loginUser = res.data;
+    }
+  } catch (error) {
+    console.log("Error fetching current user, redirecting to login", error);
+    history.push(loginPath);
+  }
+  return state;
+  // const fetchUserInfo = async () => {
+    // try {
+    //   // const user = await queryCurrentUser({
+    //   //   skipErrorHandler: true,
+    //   // });
+    //   // return user;
+    //   const res = await queryCurrentUser({
+    //     // return await queryCurrentUser({
+    //     skipErrorHandler: true,
+    //   });
+    //   // return res.data;
+    //   return res;
+    // } catch (error) {
+    //   history.push(loginPath);
+    // }
+    // return undefined;
+  // };
+  // // 如果是无需登录页面，不执行
+  // const { location } = history;
+  // if (NO_NEED_LOGIN_WHITE_LIST.includes(location.pathname)) {
+  //   return {
+  //     // @ts-ignore
+  //     fetchUserInfo,
+  //     settings: defaultSettings as Partial<LayoutSettings>,
+  //   };
+  // }
+  // const currentUser = await fetchUserInfo();
+  // return {
+  //   //@ts-ignore
+  //   fetchUserInfo,
+  //   //@ts-ignore
+  //   currentUser,
+  //   settings: defaultSettings as Partial<LayoutSettings>,
+  // };
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
@@ -64,14 +75,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
-      src: initialState?.currentUser?.userAvatar,
+      src: initialState?.loginUser?.userAvatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.userName, //normalizedUserName
+      content: initialState?.loginUser?.userName, //normalizedUserName
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -80,7 +91,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return;
       }
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser) {
+      if (!initialState?.loginUser) {
         history.push(loginPath);
       }
     },
@@ -146,6 +157,4 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const request = {
-  ...errorConfig,
-};
+export const request = requestConfig;
