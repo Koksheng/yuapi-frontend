@@ -1,4 +1,11 @@
 declare namespace API {
+  type BooleanBaseResponse = {
+    code?: number;
+    data?: boolean;
+    message?: string;
+    description?: string;
+  };
+
   type CreateInterfaceInfoRequest = {
     name?: string;
     description?: string;
@@ -57,6 +64,10 @@ declare namespace API {
     'PageRequest.PageSize'?: number;
     'PageRequest.SortField'?: string;
     'PageRequest.SortOrder'?: string;
+  };
+
+  type IdRequest = {
+    id?: number;
   };
 
   type Int32BaseResponse = {

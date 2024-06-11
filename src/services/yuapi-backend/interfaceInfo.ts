@@ -86,6 +86,36 @@ export async function getInterfaceInfoListInterfaceInfoByPageListPage(
   );
 }
 
+/** 此处后端没有提供注释 POST /api/InterfaceInfo/offlineInterfaceInfo */
+export async function postInterfaceInfoOfflineInterfaceInfo(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BooleanBaseResponse>('/api/InterfaceInfo/offlineInterfaceInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /api/InterfaceInfo/onlineInterfaceInfo */
+export async function postInterfaceInfoOnlineInterfaceInfo(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BooleanBaseResponse>('/api/InterfaceInfo/onlineInterfaceInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 POST /api/InterfaceInfo/updateInterfaceInfo */
 export async function postInterfaceInfoUpdateInterfaceInfo(
   body: API.UpdateInterfaceInfoRequest,

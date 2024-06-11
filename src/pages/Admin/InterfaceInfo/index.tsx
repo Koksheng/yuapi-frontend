@@ -18,6 +18,8 @@ import React, { useRef, useState } from 'react';
 import { getInterfaceInfoListInterfaceInfoByPageListPage, postInterfaceInfoAddInterfaceInfo, postInterfaceInfoDeleteInterfaceInfo, postInterfaceInfoUpdateInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
+import { postInterfaceInfoOnlineInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
+import { postInterfaceInfoOfflineInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
 
 const TableList: React.FC = () => {
   /**
@@ -65,6 +67,7 @@ const TableList: React.FC = () => {
    * @param fields
    */
   const handleUpdate = async (fields: API.InterfaceInfoSafetyResponse) => {
+    console.log("fields",fields);
     const hide = message.loading('Configuring');
     try {
       await postInterfaceInfoUpdateInterfaceInfo({
@@ -87,6 +90,7 @@ const TableList: React.FC = () => {
    * @param record
    */
   const handleRemove = async (record: API.InterfaceInfoSafetyResponse) => {
+    console.log("record",record);
     const hide = message.loading('正在删除');
     if (!record) return true;
     try {
@@ -100,6 +104,52 @@ const TableList: React.FC = () => {
     } catch (error: any) {
       hide();
       message.error('Delete failed, please try again'+ error.response.data.title);
+      return false;
+    }
+  };
+
+  /**
+   *  发布接口
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.IdRequest) => {
+    const hide = message.loading('正在发布接口');
+    if (!record) return true;
+    try {
+      await postInterfaceInfoOnlineInterfaceInfo({
+        id: record.id
+      });
+      hide();
+      message.success('Publish successfully and will refresh soon');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('Publish failed, please try again'+ error.response.data.title);
+      return false;
+    }
+  };
+
+  /**
+   *  下线接口
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.IdRequest) => {
+    const hide = message.loading('正在下线接口');
+    if (!record) return true;
+    try {
+      await postInterfaceInfoOfflineInterfaceInfo({
+        id: record.id
+      });
+      hide();
+      message.success('Offline successfully and will refresh soon');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('Offline failed, please try again'+ error.response.data.title);
       return false;
     }
   };
@@ -192,14 +242,34 @@ const TableList: React.FC = () => {
         >
           修改
         </a>,
-        <a
+        record.status === 0 ? <a
           key="config"
+          onClick={() => {
+            handleOnline(record);
+          }}
+        >
+          发布
+        </a> : null,
+        record.status === 1 ? <Button
+          type="text"
+          key="config"
+          danger
+          onClick={() => {
+            handleOffline(record);
+          }}
+        >
+          下线
+        </Button> : null,
+        <Button
+          type="text"
+          key="config"
+          danger
           onClick={() => {
             handleRemove(record);
           }}
         >
           删除
-        </a>,
+        </Button>,
       ],
     },
   ];
@@ -309,6 +379,7 @@ const TableList: React.FC = () => {
       <UpdateModal
         columns={columns}
         onSubmit={async (value) => {
+          console.log("value",value);
           const success = await handleUpdate(value);
           if (success) {
             handleUpdateModalOpen(false);
