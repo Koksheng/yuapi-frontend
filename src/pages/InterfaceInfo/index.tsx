@@ -1,9 +1,10 @@
 import { getInterfaceInfoGetInterfaceInfoById, getInterfaceInfoListInterfaceInfoByPageListPage } from '@/services/yuapi-backend/interfaceInfo';
 import { PageContainer } from '@ant-design/pro-components';
 import { useMatch, useModel, useParams } from '@umijs/max';
-import { Card, List, Skeleton, message, theme, Descriptions } from 'antd';
+import { Card, List, Skeleton, message, theme, Descriptions, Button, Form, Input } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 
 /*
 * 主页
@@ -32,13 +33,17 @@ const Index: React.FC = () => {
 
   useEffect(()=>{
     loadData();
-  },[])
+  },[]);
+
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
 
   return (
     <PageContainer title="View Interface Info">
         <Card>
             {data ? (
-                <Descriptions title={data.name} column={1}>
+                <Descriptions title={data.name} column={1} extra={<Button>Invoke</Button>}>
                     <DescriptionsItem label="Status">{data.status ? 'On' : 'Off'}</DescriptionsItem>
                     <DescriptionsItem label="Description">{data.description}</DescriptionsItem>
                     <DescriptionsItem label="Url">{data.url}</DescriptionsItem>
@@ -46,12 +51,32 @@ const Index: React.FC = () => {
                     <DescriptionsItem label="Request Param">{data.requestParams}</DescriptionsItem>
                     <DescriptionsItem label="Request Header">{data.requestHeader}</DescriptionsItem>
                     <DescriptionsItem label="Response Header">{data.responseHeader}</DescriptionsItem>
-                    <DescriptionsItem label="Create Time">{data.createTime}</DescriptionsItem>
-                    <DescriptionsItem label="Update Time">{data.updateTime}</DescriptionsItem>
+                    <DescriptionsItem label="Create Time">{moment(data.createTime).format('YYYY-MM-DD HH:mm:ss')}</DescriptionsItem>
+                    <DescriptionsItem label="Update Time">{moment(data.updateTime).format('YYYY-MM-DD HH:mm:ss')}</DescriptionsItem>
                 </Descriptions>
             ) : ( 
                 <>Interface Not Exists.</>
             )}
+        </Card>
+        <Card>
+            <Form
+                name="invoke"
+                layout='vertical'
+                onFinish={onFinish}
+            >
+                <Form.Item
+                    label="Request Param"
+                    name="userrequestParams"
+                >
+                    <Input.TextArea />
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ span: 16 }}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
         </Card>
     </PageContainer>
   );

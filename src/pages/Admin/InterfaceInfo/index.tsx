@@ -34,8 +34,8 @@ const TableList: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.InterfaceInfoSafetyResponse>();
+  const [selectedRowsState, setSelectedRows] = useState<API.InterfaceInfoSafetyResponse[]>([]);
 
   /**
    * @en-US Add node
@@ -67,10 +67,13 @@ const TableList: React.FC = () => {
    * @param fields
    */
   const handleUpdate = async (fields: API.InterfaceInfoSafetyResponse) => {
-    console.log("fields",fields);
+    if(!currentRow){
+      return;
+    }
     const hide = message.loading('Configuring');
     try {
       await postInterfaceInfoUpdateInterfaceInfo({
+        id: currentRow.id,
         ...fields
       });
       hide();
