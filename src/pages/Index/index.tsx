@@ -12,11 +12,11 @@ const Index: React.FC = () => {
   const [list, setList] = useState<API.InterfaceInfoSafetyResponse[]>([]);
   const [total, setTotal] = useState<number>(0);
 
-  const loadData = async (current = 1, pageSize = 10) => {
+  const loadData = async (current = 1, pageSize = 5) => {
     setLoading(true);
     try{
         const res = await getInterfaceInfoListInterfaceInfoByPageListPage({
-            current: any, pageSize
+            current, pageSize
         });
         setList(res?.data?.items ?? []);
         setTotal(res?.data?.totalCount ?? 0);
@@ -31,26 +31,37 @@ const Index: React.FC = () => {
   },[])
 
   return (
-    <PageContainer title="在线接口开放平台">
+    <PageContainer title="Online Interface Info">
         <List
             className="my-list"
             loading={loading}
             itemLayout="horizontal"
             dataSource={list}
-            renderItem={(item) => (
-                <List.Item
-                    actions={[<a key="list-loadmore-edit">view</a>]}
-                >
-                    <List.Item.Meta
-                        title={<a href="https://ant.design">{item.name}</a>}
-                        description={item.description}
-                    />
-                </List.Item>
-            )}
+            renderItem={(item) => 
+                {
+                    const apiLink = `/interface_info/${item.id}`;
+                    return (
+                        <List.Item
+                            actions={[<a key={item.id} href={apiLink}>view</a>]}
+                        >
+                            <List.Item.Meta
+                                title={<a href={apiLink}>{item.name}</a>}
+                                description={item.description}
+                            />
+                        </List.Item>
+                    );
+                }
+            }
             pagination={
                 {
-                    pageSize: 10,
-
+                    showTotal(total: number){
+                        return 'Total: ' + total;
+                    },
+                    pageSize: 5,
+                    total,
+                    onChange(page, pageSize){
+                        loadData(page, pageSize);
+                    }
                 }
             }
         />

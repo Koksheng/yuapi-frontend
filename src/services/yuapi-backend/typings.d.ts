@@ -44,10 +44,10 @@ declare namespace API {
     status?: number;
     method?: string;
     userId?: number;
-    'PageRequest.Current'?: number;
-    'PageRequest.PageSize'?: number;
-    'PageRequest.SortField'?: string;
-    'PageRequest.SortOrder'?: string;
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
   };
 
   type getInterfaceInfoListInterfaceInfoParams = {
@@ -60,10 +60,10 @@ declare namespace API {
     status?: number;
     method?: string;
     userId?: number;
-    'PageRequest.Current'?: number;
-    'PageRequest.PageSize'?: number;
-    'PageRequest.SortField'?: string;
-    'PageRequest.SortOrder'?: string;
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
   };
 
   type IdRequest = {

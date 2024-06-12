@@ -1,6 +1,7 @@
 export default [
   
-  { path: '/', name: '主页', icon: 'smile', component: './Index' },
+  { path: '/', name: 'Main', icon: 'smile', component: './Index' },
+  { path: '/interface_info/:id', name: 'View Interface', icon: 'smile', component: './InterfaceInfo', hideInMenu: true },
   {
     path: '/user',
     layout: false,
