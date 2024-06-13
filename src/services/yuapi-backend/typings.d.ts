@@ -119,6 +119,18 @@ declare namespace API {
     description?: string;
   };
 
+  type InvokeInterfaceInfoRequest = {
+    id?: number;
+    userRequestParams?: string;
+  };
+
+  type StringBaseResponse = {
+    code?: number;
+    data?: string;
+    message?: string;
+    description?: string;
+  };
+
   type UpdateInterfaceInfoRequest = {
     id?: number;
     name?: string;
