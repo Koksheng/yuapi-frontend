@@ -169,7 +169,7 @@ const TableList: React.FC = () => {
       valueType: 'index',
     },
     {
-      title: '接口名称',
+      title: 'Name', //'接口名称',
       dataIndex: 'name',
       valueType: 'text',
       formItemProps: {
@@ -179,65 +179,65 @@ const TableList: React.FC = () => {
       }
     },
     {
-      title: '描述',
+      title: 'Description', //描述
       dataIndex: 'description',
       valueType: 'textarea',
     },
     {
-      title: '请求方法',
+      title: 'Method', //请求方法
       dataIndex: 'method',
       valueType: 'text',
     },
     {
-      title: '接口地址',
+      title: 'Url', //接口地址
       dataIndex: 'url',
       valueType: 'text',
     },
     {
-      title: '请求参数',
+      title: 'Request Params', //请求参数
       dataIndex: 'requestParams',
       valueType: 'jsonCode',
     },
     {
-      title: '请求头',
+      title: 'Request Header', //请求头
       dataIndex: 'requestHeader',
       valueType: 'jsonCode',
     },
     {
-      title: '响应头',
+      title: 'Response Header', //响应头
       dataIndex: 'responseHeader',
       valueType: 'jsonCode',
     },
 
     {
-      title: '状态',
+      title: 'Status', //状态
       dataIndex: 'status',
       hideInForm: true,
       valueEnum: {
         0: {
-          text: '关闭',
+          text: 'Off', //关闭
           status: 'Default',
         },
         1: {
-          text: '开启',
+          text: 'On', //开启
           status: 'Processing',
         },
       },
     },
     {
-      title: '创建时间',
+      title: 'Create Time', //创建时间
       dataIndex: 'createTime',
       valueType: 'dateTime',
       hideInForm: true,
     },
     {
-      title: '更新时间',
+      title: 'Update Time', //更新时间
       dataIndex: 'updateTime',
       valueType: 'dateTime',
       hideInForm: true,
     },
     {
-      title: '操作',
+      title: 'Action', //操作
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
@@ -248,7 +248,7 @@ const TableList: React.FC = () => {
             setCurrentRow(record);
           }}
         >
-          修改
+          update
         </a>,
         record.status === 0 ? <a
           key="config"
@@ -256,7 +256,7 @@ const TableList: React.FC = () => {
             handleOnline(record);
           }}
         >
-          发布
+          Online
         </a> : null,
         record.status === 1 ? <Button
           type="text"
@@ -266,7 +266,7 @@ const TableList: React.FC = () => {
             handleOffline(record);
           }}
         >
-          下线
+          Offline
         </Button> : null,
         <Button
           type="text"
@@ -276,7 +276,7 @@ const TableList: React.FC = () => {
             handleRemove(record);
           }}
         >
-          删除
+          Delete
         </Button>,
       ],
     },
@@ -284,7 +284,7 @@ const TableList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>
-        headerTitle={'查询表格'}
+        // headerTitle={'查询表格'}
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -298,7 +298,7 @@ const TableList: React.FC = () => {
               handleModalOpen(true);
             }}
           >
-            <PlusOutlined /> 新建
+            <PlusOutlined /> Create
           </Button>,
         ]}
         request={async (params: API.PageParams & { pageSize?: number; current?: number }, sort: Record<string, SortOrder>, filter: Record<string, (string | number)[] | null>)=>{
@@ -330,7 +330,7 @@ const TableList: React.FC = () => {
         <FooterToolbar
           extra={
             <div>
-              已选择{' '}
+              Selected{' '}
               <a
                 style={{
                   fontWeight: 600,
@@ -338,7 +338,7 @@ const TableList: React.FC = () => {
               >
                 {selectedRowsState.length}
               </a>{' '}
-              项 &nbsp;&nbsp;
+              Items &nbsp;&nbsp;
               <span>
                 服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
               </span>
