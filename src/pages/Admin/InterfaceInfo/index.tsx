@@ -26,12 +26,12 @@ const TableList: React.FC = () => {
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
    *  */
-  const [createModalOpen, handleModalOpen] = useState<boolean>(false);
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   /**
    * @en-US The pop-up window of the distribution update window
    * @zh-CN 分布更新窗口的弹窗
    * */
-  const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.InterfaceInfoSafetyResponse>();
@@ -50,7 +50,7 @@ const TableList: React.FC = () => {
       });
       hide();
       message.success('Added successfully');
-      handleModalOpen(false);
+      handleModalVisible(false);
       return true;
     } catch (error: any) {
       hide();
@@ -244,7 +244,7 @@ const TableList: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            handleUpdateModalOpen(true);
+            handleUpdateModalVisible(true);
             setCurrentRow(record);
           }}
         >
@@ -295,23 +295,46 @@ const TableList: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              handleModalOpen(true);
+              handleModalVisible(true);
             }}
           >
             <PlusOutlined /> Create
           </Button>,
         ]}
-        request={async (params: API.PageParams & { pageSize?: number; current?: number }, sort: Record<string, SortOrder>, filter: Record<string, (string | number)[] | null>)=>{
+        // request={async (params: API.PageParams & { pageSize?: number; current?: number }, sort: Record<string, SortOrder>, filter: Record<string, (string | number)[] | null>)=>{
+        //   const res: any = await getInterfaceInfoListInterfaceInfoByPageListPage({
+        //     ...params
+        //   });
+        //   if(res?.data){
+        //     return {
+        //       data: res?.data.items || [],
+        //       success: true,
+        //       total: res.data.totalCount,
+        //     }
+        //   }else {
+        //     return {
+        //       data: [],
+        //       success: false,
+        //       total: 0,
+        //     };
+        //   }
+        // }}
+        request={async (
+          params,
+          sort: Record<string, SortOrder>,
+          filter: Record<string, React.ReactText[] | null>,
+        ) => {
           const res: any = await getInterfaceInfoListInterfaceInfoByPageListPage({
-            ...params
+            ...params,
           });
-          if(res?.data){
+          console.log("res",res);
+          if (res?.data) {
             return {
               data: res?.data.items || [],
               success: true,
-              total: res.data.totalCount,
-            }
-          }else {
+              total: res?.data.totalCount || 0,
+            };
+          } else {
             return {
               data: [],
               success: false,
@@ -319,6 +342,7 @@ const TableList: React.FC = () => {
             };
           }
         }}
+
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -357,7 +381,7 @@ const TableList: React.FC = () => {
           <Button type="primary">批量审批</Button>
         </FooterToolbar>
       )}
-      <ModalForm
+      {/* <ModalForm
         title={'新建规则'}
         width="400px"
         open={createModalOpen}
@@ -383,14 +407,14 @@ const TableList: React.FC = () => {
           name="name"
         />
         <ProFormTextArea width="md" name="desc" />
-      </ModalForm>
+      </ModalForm> */}
       <UpdateModal
         columns={columns}
         onSubmit={async (value) => {
           console.log("value",value);
           const success = await handleUpdate(value);
           if (success) {
-            handleUpdateModalOpen(false);
+            handleUpdateModalVisible(false);
             setCurrentRow(undefined);
             if (actionRef.current) {
               actionRef.current.reload();
@@ -398,12 +422,12 @@ const TableList: React.FC = () => {
           }
         }}
         onCancel={() => {
-          handleUpdateModalOpen(false);
+          handleUpdateModalVisible(false);
           if (!showDetail) {
             setCurrentRow(undefined);
           }
         }}
-        visible={updateModalOpen}
+        visible={updateModalVisible}
         values={currentRow || {}}
       />
 
@@ -431,7 +455,7 @@ const TableList: React.FC = () => {
         )}
       </Drawer>
       {/* createModalOpen = createModalVisible in yupi project */}
-      <CreateModal columns={columns} onCancel={() =>{handleModalOpen(false)}} onSubmit={(values) =>{handleAdd(values)}} visible={createModalOpen}/>
+      <CreateModal columns={columns} onCancel={() =>{handleModalVisible(false)}} onSubmit={(values) =>{handleAdd(values)}} visible={createModalVisible}/>
     </PageContainer>
   );
 };
