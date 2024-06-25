@@ -26,7 +26,18 @@ declare namespace API {
     method?: string;
   };
 
+  type CreateUserInterfaceInfoRequest = {
+    userId?: number;
+    interfaceInfoId?: number;
+    totalNum?: number;
+    leftNum?: number;
+  };
+
   type DeleteInterfaceInfoRequest = {
+    id?: number;
+  };
+
+  type DeleteRequest = {
     id?: number;
   };
 
@@ -60,6 +71,36 @@ declare namespace API {
     status?: number;
     method?: string;
     userId?: number;
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+  };
+
+  type getUserInterfaceInfoGetUserInterfaceInfoByIdParams = {
+    id?: number;
+  };
+
+  type getUserInterfaceInfoListUserInterfaceInfoByPageListPageParams = {
+    id?: number;
+    userId?: number;
+    interfaceInfoId?: number;
+    totalNum?: number;
+    leftNum?: number;
+    status?: number;
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+  };
+
+  type getUserInterfaceInfoListUserInterfaceInfoParams = {
+    id?: number;
+    userId?: number;
+    interfaceInfoId?: number;
+    totalNum?: number;
+    leftNum?: number;
+    status?: number;
     current?: number;
     pageSize?: number;
     sortField?: string;
@@ -119,6 +160,28 @@ declare namespace API {
     description?: string;
   };
 
+  type InterfaceInfoWithTotalNumResponse = {
+    id?: number;
+    name?: string;
+    description?: string;
+    url?: string;
+    requestParams?: string;
+    requestHeader?: string;
+    responseHeader?: string;
+    status?: number;
+    method?: string;
+    createTime?: string;
+    updateTime?: string;
+    totalNum?: number;
+  };
+
+  type InterfaceInfoWithTotalNumResponseListBaseResponse = {
+    code?: number;
+    data?: InterfaceInfoWithTotalNumResponse[];
+    message?: string;
+    description?: string;
+  };
+
   type InvokeInterfaceInfoRequest = {
     id?: number;
     userRequestParams?: string;
@@ -141,6 +204,53 @@ declare namespace API {
     responseHeader?: string;
     status?: number;
     method?: string;
+  };
+
+  type UpdateUserInterfaceInfoRequest = {
+    id?: number;
+    totalNum?: number;
+    leftNum?: number;
+    status?: number;
+  };
+
+  type UserInterfaceInfoSafetyResponse = {
+    id?: number;
+    userId?: number;
+    interfaceInfoId?: number;
+    totalNum?: number;
+    leftNum?: number;
+    status?: number;
+    createTime?: string;
+    updateTime?: string;
+    isDelete?: number;
+  };
+
+  type UserInterfaceInfoSafetyResponseBaseResponse = {
+    code?: number;
+    data?: UserInterfaceInfoSafetyResponse;
+    message?: string;
+    description?: string;
+  };
+
+  type UserInterfaceInfoSafetyResponseListBaseResponse = {
+    code?: number;
+    data?: UserInterfaceInfoSafetyResponse[];
+    message?: string;
+    description?: string;
+  };
+
+  type UserInterfaceInfoSafetyResponsePaginatedList = {
+    items?: UserInterfaceInfoSafetyResponse[];
+    totalCount?: number;
+    currentPage?: number;
+    pageSize?: number;
+  };
+
+  type UserInterfaceInfoSafetyResponsePaginatedListBaseResponse = {
+    code?: number;
+    data?: UserInterfaceInfoSafetyResponsePaginatedList;
+    message?: string;
+    description?: string;
   };
 
   type UserLoginRequest = {
