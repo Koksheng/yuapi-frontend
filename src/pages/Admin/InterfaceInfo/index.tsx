@@ -11,8 +11,8 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, Drawer, Input, message, Space } from 'antd';
-import React, { useRef, useState } from 'react';
+import { Button, ConfigProvider, Drawer, Input, message, Select, Space } from 'antd';
+import React, { useContext, useRef, useState } from 'react';
 // import type { FormValueType } from './components/UpdateForm';
 // import UpdateForm from './components/UpdateForm';
 import { getInterfaceInfoListInterfaceInfoByPageListPage, postInterfaceInfoAddInterfaceInfo, postInterfaceInfoDeleteInterfaceInfo, postInterfaceInfoUpdateInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
@@ -20,8 +20,21 @@ import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 import { postInterfaceInfoOnlineInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
 import { postInterfaceInfoOfflineInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
+// import zhCNIntl from 'antd/lib/locale/zh_CN';
+// import enUSIntl from 'antd/lib/locale/en_US';
+// import dayjs from 'dayjs';
+import enUS from 'antd/es/locale/en_US';
+
+// const intlMap = {
+//   zhCNIntl,
+//   enUSIntl,
+// };
+
+
+
 
 const TableList: React.FC = () => {
+
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -36,6 +49,7 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.InterfaceInfoSafetyResponse>();
   const [selectedRowsState, setSelectedRows] = useState<API.InterfaceInfoSafetyResponse[]>([]);
+  // const [intl, setIntl] = useState('enUSIntl');
 
   /**
    * @en-US Add node
@@ -299,6 +313,8 @@ const TableList: React.FC = () => {
     },
   ];
   return (
+    // <ConfigProvider locale={intlMap[intl as 'zhCNIntl']}>
+    <ConfigProvider locale={enUS}>
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>
         // headerTitle={'查询表格'}
@@ -318,24 +334,6 @@ const TableList: React.FC = () => {
             <PlusOutlined /> Create
           </Button>,
         ]}
-        // request={async (params: API.PageParams & { pageSize?: number; current?: number }, sort: Record<string, SortOrder>, filter: Record<string, (string | number)[] | null>)=>{
-        //   const res: any = await getInterfaceInfoListInterfaceInfoByPageListPage({
-        //     ...params
-        //   });
-        //   if(res?.data){
-        //     return {
-        //       data: res?.data.items || [],
-        //       success: true,
-        //       total: res.data.totalCount,
-        //     }
-        //   }else {
-        //     return {
-        //       data: [],
-        //       success: false,
-        //       total: 0,
-        //     };
-        //   }
-        // }}
         request={async (
           params,
           sort: Record<string, SortOrder>,
@@ -361,14 +359,14 @@ const TableList: React.FC = () => {
         }}
 
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
+        // rowSelection={{
+        //   onChange: (_, selectedRows) => {
+        //     setSelectedRows(selectedRows);
+        //   },
+        // }}
         scroll={{ x: 1500 }} // enable horizontal scroll
       />
-      {selectedRowsState?.length > 0 && (
+      {/* {selectedRowsState?.length > 0 && (
         <FooterToolbar
           extra={
             <div>
@@ -398,7 +396,7 @@ const TableList: React.FC = () => {
           </Button>
           <Button type="primary">批量审批</Button>
         </FooterToolbar>
-      )}
+      )} */}
       {/* <ModalForm
         title={'新建规则'}
         width="400px"
@@ -481,6 +479,7 @@ const TableList: React.FC = () => {
       {/* createModalOpen = createModalVisible in yupi project */}
       {/* <CreateModal columns={columns} onCancel={() =>{handleModalVisible(false)}} onSubmit={(values) =>{handleAdd(values)}} visible={createModalVisible}/> */}
     </PageContainer>
+    </ConfigProvider>
   );
 };
 export default TableList;
