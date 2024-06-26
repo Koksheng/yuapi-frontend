@@ -3,7 +3,7 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Modal } from 'antd';
+import { Modal, Form } from 'antd';
 import React from 'react';
 
 export type Props = {
@@ -15,14 +15,24 @@ export type Props = {
 
 const CreateModal: React.FC<Props> = (props) => {
   const { visible, columns, onCancel, onSubmit } = props;
+  const [form] = Form.useForm();
 
   return (
-    <Modal visible={visible} footer={null} onCancel={() => onCancel?.()}>
-      <ProTable
+    <Modal visible={visible} footer={null} onCancel={() => {
+        onCancel?.();
+        form.resetFields(); // Reset form fields when modal is closed
+      }}>
+      <ProTable<API.InterfaceInfoSafetyResponse, API.InterfaceInfoSafetyResponse>
         type="form"
+        form={{
+          form,
+        }}
         columns={columns}
         onSubmit={async (value) => {
-          onSubmit?.(value);
+          const success = await onSubmit?.(value);
+          if (success) {
+            form.resetFields(); // Reset form fields after successful submission
+          }
         }} 
       />
     </Modal>

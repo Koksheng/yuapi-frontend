@@ -11,7 +11,7 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, Drawer, Input, message } from 'antd';
+import { Button, Drawer, Input, message, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 // import type { FormValueType } from './components/UpdateForm';
 // import UpdateForm from './components/UpdateForm';
@@ -49,8 +49,9 @@ const TableList: React.FC = () => {
         ...fields,
       });
       hide();
-      message.success('Added successfully');
+      message.success('Added successfully and will refresh soon');
       handleModalVisible(false);
+      actionRef.current?.reload(); // Reload the table data
       return true;
     } catch (error: any) {
       hide();
@@ -70,14 +71,17 @@ const TableList: React.FC = () => {
     if(!currentRow){
       return;
     }
-    const hide = message.loading('Configuring');
+    const hide = message.loading('Updating');
     try {
       await postInterfaceInfoUpdateInterfaceInfo({
         id: currentRow.id,
         ...fields
       });
       hide();
-      message.success('Configuration is successful');
+      message.success('Updated successfully and will refresh soon');
+      handleUpdateModalVisible(false);
+      setCurrentRow(undefined);
+      actionRef.current?.reload(); // Reload the table data
       return true;
     } catch (error: any) {
       hide();
@@ -94,7 +98,7 @@ const TableList: React.FC = () => {
    */
   const handleRemove = async (record: API.InterfaceInfoSafetyResponse) => {
     console.log("record",record);
-    const hide = message.loading('正在删除');
+    const hide = message.loading('Deleting');
     if (!record) return true;
     try {
       await postInterfaceInfoDeleteInterfaceInfo({
@@ -117,7 +121,7 @@ const TableList: React.FC = () => {
    * @param record
    */
   const handleOnline = async (record: API.IdRequest) => {
-    const hide = message.loading('正在发布接口');
+    const hide = message.loading('Publishing');
     if (!record) return true;
     try {
       await postInterfaceInfoOnlineInterfaceInfo({
@@ -140,7 +144,7 @@ const TableList: React.FC = () => {
    * @param record
    */
   const handleOffline = async (record: API.IdRequest) => {
-    const hide = message.loading('正在下线接口');
+    const hide = message.loading('Configuring');
     if (!record) return true;
     try {
       await postInterfaceInfoOfflineInterfaceInfo({
@@ -240,45 +244,58 @@ const TableList: React.FC = () => {
       title: 'Action', //操作
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
-          }}
-        >
-          update
-        </a>,
-        record.status === 0 ? <a
-          key="config"
-          onClick={() => {
-            handleOnline(record);
-          }}
-        >
-          Online
-        </a> : null,
-        record.status === 1 ? <Button
-          type="text"
-          key="config"
-          danger
-          onClick={() => {
-            handleOffline(record);
-          }}
-        >
-          Offline
-        </Button> : null,
-        <Button
-          type="text"
-          key="config"
-          danger
-          onClick={() => {
-            handleRemove(record);
-          }}
-        >
-          Delete
-        </Button>,
-      ],
+      width: 200,
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="link"
+            key="update"
+            style={{ padding: '0px' }}
+            onClick={() => {
+              handleUpdateModalVisible(true);
+              setCurrentRow(record);
+            }}
+          >
+            Update
+          </Button>
+          {record.status === 0 && ( 
+            <Button
+              type="link"
+              key="online"
+              style={{ padding: '0px' }}
+              onClick={() => {
+                handleOnline(record);
+              }}
+            >
+              Online
+            </Button> 
+          )}
+          {record.status === 1 && ( 
+            <Button
+              type="text"
+              key="offline"
+              style={{ padding: '0px' }}
+              danger
+              onClick={() => {
+                handleOffline(record);
+              }}
+            >
+              Offline
+            </Button> 
+          )}
+          <Button
+            type="text"
+            key="delete"
+            style={{ padding: '0px' }}
+            danger
+            onClick={() => {
+              handleRemove(record);
+            }}
+          >
+            Delete
+          </Button>
+        </Space>
+      ),
     },
   ];
   return (
@@ -349,6 +366,7 @@ const TableList: React.FC = () => {
             setSelectedRows(selectedRows);
           },
         }}
+        scroll={{ x: 1500 }} // enable horizontal scroll
       />
       {selectedRowsState?.length > 0 && (
         <FooterToolbar
@@ -408,6 +426,12 @@ const TableList: React.FC = () => {
         />
         <ProFormTextArea width="md" name="desc" />
       </ModalForm> */}
+      <CreateModal
+        visible={createModalVisible}
+        columns={columns}
+        onCancel={() => handleModalVisible(false)}
+        onSubmit={handleAdd}
+      />
       <UpdateModal
         columns={columns}
         onSubmit={async (value) => {
@@ -455,7 +479,7 @@ const TableList: React.FC = () => {
         )}
       </Drawer>
       {/* createModalOpen = createModalVisible in yupi project */}
-      <CreateModal columns={columns} onCancel={() =>{handleModalVisible(false)}} onSubmit={(values) =>{handleAdd(values)}} visible={createModalVisible}/>
+      {/* <CreateModal columns={columns} onCancel={() =>{handleModalVisible(false)}} onSubmit={(values) =>{handleAdd(values)}} visible={createModalVisible}/> */}
     </PageContainer>
   );
 };
