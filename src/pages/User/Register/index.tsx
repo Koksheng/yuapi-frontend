@@ -137,7 +137,7 @@ const Register: React.FC = () => {
             },
           }}
           logo={<SmileOutlined style={{ fontSize: '44px' }} />}
-          title="Koksheng API"
+          title="Yuapi API"
           subTitle={'Register, Share, and Track Your APIs'}
           initialValues={{
             autoLogin: true,
