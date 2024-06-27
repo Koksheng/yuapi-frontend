@@ -1,9 +1,9 @@
 import { Footer } from '@/components';
 import { SYSTEM_LOGO } from '@/constants';
 import { register } from '@/services/ant-design-pro/api';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LockOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { Helmet, history } from '@umijs/max';
+import { Helmet, history, Link } from '@umijs/max';
 import { Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
@@ -80,7 +80,7 @@ const Register: React.FC = () => {
     const { userPassword, checkPassword } = values;
     // 校验 verify
     if (userPassword !== checkPassword) {
-      message.error('两次输入的密码不一致');
+      message.error('Password and Confirm Password do not match');
       return;
     }
     try {
@@ -91,7 +91,7 @@ const Register: React.FC = () => {
       });
       // if (res.code===0 && res.data > 0) {
       if (id) {
-        const defaultLoginSuccessMessage = '注册成功！';
+        const defaultLoginSuccessMessage = 'Registration Successfully';
         message.success(defaultLoginSuccessMessage);
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
@@ -108,7 +108,7 @@ const Register: React.FC = () => {
       //   throw new Error("resiter error id");
       // }
     } catch (error: any) {
-      const defaultLoginFailureMessage = '注册失败，请重试！';
+      const defaultLoginFailureMessage = 'Registration failed, please try again!';
       message.error(defaultLoginFailureMessage);
     }
   };
@@ -116,7 +116,7 @@ const Register: React.FC = () => {
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'注册'}- {Settings.title}
+          {'Register'}- {Settings.title}
         </title>
       </Helmet>
 
@@ -133,12 +133,12 @@ const Register: React.FC = () => {
           }}
           submitter={{
             searchConfig: {
-              submitText: '注册',
+              submitText: 'Register',
             },
           }}
-          logo={<img alt="logo" src={SYSTEM_LOGO} />}
-          title="Ant Design"
-          subTitle={'Ant Design 是西湖区最具影响力的 Web 设计规范'}
+          logo={<SmileOutlined style={{ fontSize: '44px' }} />}
+          title="Koksheng API"
+          subTitle={'Register, Share, and Track Your APIs'}
           initialValues={{
             autoLogin: true,
           }}
@@ -154,7 +154,7 @@ const Register: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: '账户密码注册',
+                label: 'User Registration',
               },
             ]}
           />
@@ -167,11 +167,11 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'请输入账户'}
+                placeholder={'Please enter your account'}
                 rules={[
                   {
                     required: true,
-                    message: '账户是必填项！',
+                    message: 'Account is required!',
                   },
                 ]}
               />
@@ -181,16 +181,16 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'请输入密码'}
+                placeholder={'Please enter your password'}
                 rules={[
                   {
                     required: true,
-                    message: '密码是必填项！',
+                    message: 'Password is required!',
                   },
                   {
                     min: 8,
                     type: 'string',
-                    message: '长度不能小于8',
+                    message: 'The length cannot be less than 8',
                   },
                 ]}
               />
@@ -200,20 +200,20 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'请再次输入密码'}
+                placeholder={'Please enter confirm password'}
                 rules={[
                   {
                     required: true,
-                    message: '确认密码是必填项！',
+                    message: 'Confirm password is required',
                   },
                   {
                     min: 8,
                     type: 'string',
-                    message: '长度不能小于8',
+                    message: 'The length cannot be less than 8',
                   },
                 ]}
               />
-              <ProFormText
+              {/* <ProFormText
                 name="planetCode"
                 fieldProps={{
                   size: 'large',
@@ -226,9 +226,16 @@ const Register: React.FC = () => {
                     message: '星球编号是必填项！',
                   },
                 ]}
-              />
+              /> */}
             </>
           )}
+          <div
+            style={{
+              marginBottom: 24,
+            }}
+          >
+            <Link to='/user/login'><ArrowLeftOutlined />  Back to Login</Link>
+          </div>
         </LoginForm>
       </div>
       <Footer />

@@ -137,4 +137,10 @@ export default defineConfig({
   },
   esbuildMinifyIIFE: true,
   requestRecord: {},
+  locale: {
+    default: 'en-US',
+    antd: true, // Enable Ant Design i18n
+    baseNavigator: true,
+    baseSeparator: '-',
+  },
 });

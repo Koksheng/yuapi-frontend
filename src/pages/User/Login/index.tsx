@@ -5,6 +5,7 @@ import {
   AlipayCircleOutlined,
   LockOutlined,
   MobileOutlined,
+  SmileOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
@@ -156,7 +157,7 @@ const Login: React.FC = () => {
     //   // setUserLoginState(res.data);
     //   setUserLoginState(res);
     } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
+      const defaultLoginFailureMessage = 'Login Failed, Pls Try Again.'//'登录失败，请重试！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
     }
@@ -167,7 +168,7 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'Login'}- {Settings.title}
         </title>
       </Helmet>
       
@@ -182,10 +183,9 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src={SYSTEM_LOGO} />}
-          title="Ant Design"
-          subTitle={'Ant Design 是西湖区最具影响力的 Web 设计规范'
-          }
+          logo={<SmileOutlined style={{ fontSize: '44px' }} />}
+          title="Koksheng API"
+          subTitle={'Register, Share, and Track Your APIs'}
           initialValues={{
             autoLogin: true,
           }}
@@ -202,7 +202,7 @@ const Login: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: '账户密码登录',
+                label: 'Login'//'账户密码登录',
               },
               // {
               //   key: 'mobile',
@@ -212,7 +212,8 @@ const Login: React.FC = () => {
           />
 
           {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的账户和密码'} />
+            // <LoginMessage content={'错误的账户和密码'} />
+            <LoginMessage content={'Incorrect account or password'} />
           )}
           {type === 'account' && (
             <>
@@ -222,11 +223,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'请输入账户'}
+                placeholder={'Please enter user account'}
                 rules={[
                   {
                     required: true,
-                    message: '账户是必填项！',
+                    message: 'User account is required！',
                   },
                 ]}
               />
@@ -236,11 +237,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'请输入密码'}
+                placeholder={'Please enter password'}
                 rules={[
                   {
                     required: true,
-                    message: '密码是必填项！',
+                    message: 'Password is required！',
                   },
                 ]}
               />
@@ -251,19 +252,21 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <Space split={<Divider type='vertical'/>}>
+            {/* <Space split={<Divider type='vertical'/>}> */}
             <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
+              Remember me
             </ProFormCheckbox>
-            <Link to='/user/register'>新用户注册</Link>
-            <a
+            <Link style={{
+                float: 'right',
+              }} to='/user/register'>Don't have account? Create one</Link>
+            {/* <a
               style={{
                 float: 'right',
               }}
             >
-              忘记密码 ?
-            </a>
-            </Space>
+              Forgot Password?
+            </a> */}
+            {/* </Space> */}
           </div>
         </LoginForm>
       </div>
