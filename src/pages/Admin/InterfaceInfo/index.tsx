@@ -13,23 +13,12 @@ import {
 import '@umijs/max';
 import { Button, ConfigProvider, Drawer, Input, message, Select, Space } from 'antd';
 import React, { useContext, useRef, useState } from 'react';
-// import type { FormValueType } from './components/UpdateForm';
-// import UpdateForm from './components/UpdateForm';
 import { getInterfaceInfoListInterfaceInfoByPageListPage, postInterfaceInfoAddInterfaceInfo, postInterfaceInfoDeleteInterfaceInfo, postInterfaceInfoUpdateInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 import { postInterfaceInfoOnlineInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
 import { postInterfaceInfoOfflineInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
-// import zhCNIntl from 'antd/lib/locale/zh_CN';
-// import enUSIntl from 'antd/lib/locale/en_US';
-// import dayjs from 'dayjs';
 import enUS from 'antd/es/locale/en_US';
-
-// const intlMap = {
-//   zhCNIntl,
-//   enUSIntl,
-// };
-
 
 
 
@@ -315,7 +304,6 @@ const TableList: React.FC = () => {
     },
   ];
   return (
-    // <ConfigProvider locale={intlMap[intl as 'zhCNIntl']}>
     <ConfigProvider locale={enUS}>
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>

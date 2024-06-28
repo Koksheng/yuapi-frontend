@@ -18,6 +18,7 @@ export default [
     routes: [
       { name: 'Interface Management', icon: 'table', path: '/admin/interface_info', component: './Admin/InterfaceInfo' },
       { name: 'Interface Analysis', icon: 'analysis', path: '/admin/interface_analysis', component: './Admin/InterfaceAnalysis' },
+      { name: 'User Management', icon: 'analysis', path: '/admin/user_manage', component: './Admin/UserManage' },
       // { path: '/admin', redirect: '/admin/sub-page' },
       // { path: '/admin/sub-page', name: '二级管理页', component: './Admin' },
       // { path: '/admin/user-manage', name: '用户管理', component: './Admin/UserManage' },

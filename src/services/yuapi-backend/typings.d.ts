@@ -107,6 +107,18 @@ declare namespace API {
     sortOrder?: string;
   };
 
+  type getUserListUserByPageListPageParams = {
+    id?: number;
+    userName?: string;
+    userAccount?: string;
+    gender?: number;
+    userRole?: string;
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+  };
+
   type IdRequest = {
     id?: number;
   };
@@ -202,7 +214,6 @@ declare namespace API {
     requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
-    status?: number;
     method?: string;
   };
 
@@ -279,6 +290,20 @@ declare namespace API {
   type UserSafetyResponseBaseResponse = {
     code?: number;
     data?: UserSafetyResponse;
+    message?: string;
+    description?: string;
+  };
+
+  type UserSafetyResponsePaginatedList = {
+    items?: UserSafetyResponse[];
+    totalCount?: number;
+    currentPage?: number;
+    pageSize?: number;
+  };
+
+  type UserSafetyResponsePaginatedListBaseResponse = {
+    code?: number;
+    data?: UserSafetyResponsePaginatedList;
     message?: string;
     description?: string;
   };
