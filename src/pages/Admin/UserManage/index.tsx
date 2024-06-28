@@ -1,12 +1,11 @@
 import { ProTable, PageContainer, ActionType, ProColumns } from '@ant-design/pro-components';
-import { PlusOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Drawer, Image, Space, message } from 'antd';
 import React, { useRef, useState, ReactNode } from 'react';
 import enUS from 'antd/es/locale/en_US';
-import { getUserListUserByPageListPage } from '@/services/yuapi-backend/user';
+import { getUserListUserByPageListPage, postUserUpdateUser } from '@/services/yuapi-backend/user';
+import UpdateModal from './components/UpdateModal';
 
 const TableList: React.FC = () => {
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
@@ -18,7 +17,7 @@ const TableList: React.FC = () => {
     }
     const hide = message.loading('Updating');
     try {
-      await postInterfaceInfoUpdateInterfaceInfo({
+      await postUserUpdateUser({
         id: currentRow.id,
         ...fields
       });
@@ -35,7 +34,7 @@ const TableList: React.FC = () => {
     }
   };
 
-  const columns: ProColumns<API.UserSafetyResponse>[] = [
+  const columns: ProColumns<API.AdminPageUserSafetyResponse>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -85,11 +84,38 @@ const TableList: React.FC = () => {
           status: 'Success',
         },
       },
+      fieldProps: {
+        options: [
+          { label: 'Male', value: 0 },
+          { label: 'Female', value: 1 },
+        ],
+      },
     },
     {
       title: 'Role',
       dataIndex: 'userRole',
       // copyable: true,
+    },
+    { 
+      title: 'Status',
+      dataIndex: 'isDelete',
+      valueType: 'select',
+      valueEnum: {
+        1: {
+          text: 'Inactive',
+          status: 'Error',
+        },
+        0: {
+          text: 'Active',
+          status: 'Success',
+        },
+      },
+      fieldProps: {
+        options: [
+          { label: 'Active', value: 0 },
+          { label: 'Inactive', value: 1 },
+        ],
+      },
     },
     {
       title: 'Create Time', //创建时间
@@ -122,17 +148,6 @@ const TableList: React.FC = () => {
             }}
           >
             Update
-          </Button>
-          <Button
-            type="text"
-            key="delete"
-            style={{ padding: '0px' }}
-            danger
-            onClick={() => {
-              // handleRemove(record);
-            }}
-          >
-            Delete
           </Button>
         </Space>
       ),
@@ -181,7 +196,7 @@ const TableList: React.FC = () => {
           columns={columns}
           onCancel={() => handleModalVisible(false)}
           onSubmit={handleAdd}
-        />
+        /> */}
         <UpdateModal
           columns={columns}
           onSubmit={async (value) => {
@@ -203,33 +218,7 @@ const TableList: React.FC = () => {
           }}
           visible={updateModalVisible}
           values={currentRow || {}}
-        /> */}
-
-        {/* <Drawer
-          width={600}
-          open={showDetail}
-          onClose={() => {
-            setCurrentRow(undefined);
-            setShowDetail(false);
-          }}
-          closable={false}
-        >
-          {currentRow?.name && (
-            <ProDescriptions<API.RuleListItem>
-              column={2}
-              title={currentRow?.name}
-              request={async () => ({
-                data: currentRow || {},
-              })}
-              params={{
-                id: currentRow?.name,
-              }}
-              columns={columns as ProDescriptionsItemProps<API.RuleListItem>[]}
-            />
-          )}
-        </Drawer> */}
-        {/* createModalOpen = createModalVisible in yupi project */}
-        {/* <CreateModal columns={columns} onCancel={() =>{handleModalVisible(false)}} onSubmit={(values) =>{handleAdd(values)}} visible={createModalVisible}/> */}
+        />
       </PageContainer>
     </ConfigProvider>
   );

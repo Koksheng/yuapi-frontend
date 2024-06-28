@@ -1,4 +1,31 @@
 declare namespace API {
+  type AdminPageUserSafetyResponse = {
+    id?: number;
+    userName?: string;
+    userAccount?: string;
+    userAvatar?: string;
+    gender?: number;
+    userRole?: string;
+    isDelete?: number;
+    createTime?: string;
+    updateTime?: string;
+    token?: string;
+  };
+
+  type AdminPageUserSafetyResponsePaginatedList = {
+    items?: AdminPageUserSafetyResponse[];
+    totalCount?: number;
+    currentPage?: number;
+    pageSize?: number;
+  };
+
+  type AdminPageUserSafetyResponsePaginatedListBaseResponse = {
+    code?: number;
+    data?: AdminPageUserSafetyResponsePaginatedList;
+    message?: string;
+    description?: string;
+  };
+
   type BooleanBaseResponse = {
     code?: number;
     data?: boolean;
@@ -113,6 +140,7 @@ declare namespace API {
     userAccount?: string;
     gender?: number;
     userRole?: string;
+    isDelete?: number;
     current?: number;
     pageSize?: number;
     sortField?: string;
@@ -224,6 +252,15 @@ declare namespace API {
     status?: number;
   };
 
+  type UpdateUserRequest = {
+    id?: number;
+    userName?: string;
+    userAvatar?: string;
+    gender?: number;
+    userRole?: string;
+    isDelete?: number;
+  };
+
   type UserInterfaceInfoSafetyResponse = {
     id?: number;
     userId?: number;
@@ -290,20 +327,6 @@ declare namespace API {
   type UserSafetyResponseBaseResponse = {
     code?: number;
     data?: UserSafetyResponse;
-    message?: string;
-    description?: string;
-  };
-
-  type UserSafetyResponsePaginatedList = {
-    items?: UserSafetyResponse[];
-    totalCount?: number;
-    currentPage?: number;
-    pageSize?: number;
-  };
-
-  type UserSafetyResponsePaginatedListBaseResponse = {
-    code?: number;
-    data?: UserSafetyResponsePaginatedList;
     message?: string;
     description?: string;
   };

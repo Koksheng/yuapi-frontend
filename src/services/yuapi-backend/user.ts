@@ -16,7 +16,7 @@ export async function getUserListUserByPageListPage(
   params: API.getUserListUserByPageListPageParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.UserSafetyResponsePaginatedListBaseResponse>(
+  return request<API.AdminPageUserSafetyResponsePaginatedListBaseResponse>(
     '/api/User/listUserByPage/list/page',
     {
       method: 'GET',
@@ -26,6 +26,21 @@ export async function getUserListUserByPageListPage(
       ...(options || {}),
     },
   );
+}
+
+/** 此处后端没有提供注释 POST /api/User/updateUser */
+export async function postUserUpdateUser(
+  body: API.UpdateUserRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.Int32BaseResponse>('/api/User/updateUser', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
 }
 
 /** 此处后端没有提供注释 POST /api/User/userLogin */
