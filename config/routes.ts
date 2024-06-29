@@ -11,6 +11,10 @@ export default [
     ],
   },
   {
+    path: '/user',
+    routes: [{ name: 'Personal Info', path: '/user/personal_info', component: './User/PersonalInfo' }],
+  },
+  {
     path: '/admin',
     name: 'Management Page',
     icon: 'crown',

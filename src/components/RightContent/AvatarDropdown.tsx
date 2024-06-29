@@ -39,7 +39,7 @@ const useStyles = createStyles(({ token }) => {
   };
 });
 
-export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, children }) => {
+export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu = true, children }) => {
   /**
    * 退出登录，并且将当前的 url 保存
    */
@@ -69,12 +69,13 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       const { key } = event;
       if (key === 'logout') {
         flushSync(() => {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
+          setInitialState((s) => ({ ...s, loginUser: undefined }));
         });
         loginOut();
         return;
       }
-      history.push(`/account/${key}`);
+      // history.push(`/account/${key}`);
+      history.push(`/user/personal_info`);
     },
     [setInitialState],
   );
@@ -108,13 +109,13 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
           {
             key: 'center',
             icon: <UserOutlined />,
-            label: '个人中心',
+            label: 'Personal Center',
           },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: '个人设置',
-          },
+          // {
+          //   key: 'settings',
+          //   icon: <SettingOutlined />,
+          //   label: '个人设置',
+          // },
           {
             type: 'divider' as const,
           },
