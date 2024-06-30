@@ -19,17 +19,56 @@ import { LoadingOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import moment from 'moment';
 import { postUserUpdateUser } from '@/services/yuapi-backend/user';
+import { requestConfig } from '@/requestConfig';
+import { RcFile, UploadChangeParam } from 'antd/es/upload';
   
 const { Option } = Select;
 
+const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result as string));
+  reader.readAsDataURL(img);
+};
+
+const beforeUpload = (file: RcFile) => {
+  console.log("beforeUpload");
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt3M = file.size / 1024 / 1024 < 3;
+  if (!isLt3M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  console.log("isJpgOrPng",isJpgOrPng);
+  console.log("isLt3M",isLt3M);
+  return isJpgOrPng && isLt3M;
+};
   
-  const Index: React.FC = () => {
+const Index: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [updateModalShow, setUpdateModalShow] = useState<boolean>(false);
     const { initialState, setInitialState } = useModel('@@initialState');
     const { loginUser } = initialState || {};
-    const [imageUrl, setImageUrl] =  useState<string | null>(loginUser?.userAvatar ?? null);
+    const [imageUrl, setImageUrl] =  useState<string | null>(loginUser?.userAvatar ? `${requestConfig.baseURL}/${loginUser.userAvatar}` : null);
     
+    const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
+      
+      console.log("handleChange",info);
+      if (info.file.status === 'uploading') {
+        setLoading(true);
+        return;
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj as RcFile, (url) => {
+          setLoading(false);
+          setImageUrl(url);
+        });
+        location.reload();
+      }
+    };
+
     const formItemLayout = {
         labelCol: { span: 6 },
         wrapperCol: { span: 14 },
@@ -91,9 +130,9 @@ const { Option } = Select;
                     showUploadList={false}
                     maxCount={1}
                     withCredentials={true}
-                    // action={requestConfig.baseURL + '/api/user/update/avatar'}
-                    // beforeUpload={beforeUpload}
-                    // onChange={handleChange}
+                    action={requestConfig.baseURL + '/api/User/updateUserAvatar/update/avatar'}
+                    beforeUpload={beforeUpload}
+                    onChange={handleChange}
                   >
                     {imageUrl ? (
                       <Avatar
@@ -104,7 +143,7 @@ const { Option } = Select;
                     ) : (
                       <div>
                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                        <div style={{ marginTop: 8 }}>上传头像</div>
+                        <div style={{ marginTop: 8 }}>Upload Avatar</div>
                       </div>
                     )}
                   </Upload>
@@ -191,7 +230,7 @@ const { Option } = Select;
         </Modal>
       </>
     );
-  };
+};
   
-  export default Index;
+export default Index;
   

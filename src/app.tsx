@@ -76,7 +76,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // layout: "top",
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
-      src: initialState?.loginUser?.userAvatar,
+      src: initialState?.loginUser?.userAvatar ? `${requestConfig.baseURL}/${initialState?.loginUser?.userAvatar}` : null, 
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
