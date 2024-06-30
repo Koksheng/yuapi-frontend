@@ -261,6 +261,18 @@ declare namespace API {
     isDelete?: number;
   };
 
+  type UserDevKeyResponse = {
+    accessKey?: string;
+    secretKey?: string;
+  };
+
+  type UserDevKeyResponseBaseResponse = {
+    code?: number;
+    data?: UserDevKeyResponse;
+    message?: string;
+    description?: string;
+  };
+
   type UserInterfaceInfoSafetyResponse = {
     id?: number;
     userId?: number;

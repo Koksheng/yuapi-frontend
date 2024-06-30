@@ -4,6 +4,7 @@ import React, { useRef, useState, ReactNode } from 'react';
 import enUS from 'antd/es/locale/en_US';
 import { getUserListUserByPageListPage, postUserUpdateUser } from '@/services/yuapi-backend/user';
 import UpdateModal from './components/UpdateModal';
+import { requestConfig } from '@/requestConfig';
 
 const TableList: React.FC = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -64,9 +65,10 @@ const TableList: React.FC = () => {
       title: 'Avatar',
       dataIndex: 'userAvatar',
       hideInSearch: true,
+      hideInForm: true,
       render: (_: ReactNode, record: API.UserSafetyResponse) => (
         <div>
-          <Image src={record.userAvatar} width={100} />
+          <Image src={`${requestConfig.baseURL}/${record.userAvatar}`} width={100} />
         </div>
       ),
     },

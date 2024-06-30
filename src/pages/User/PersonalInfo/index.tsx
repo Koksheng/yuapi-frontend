@@ -18,11 +18,12 @@ import React, { useState } from 'react';
 import { LoadingOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import moment from 'moment';
-import { postUserUpdateUser } from '@/services/yuapi-backend/user';
+import { getUserGetKey, postUserUpdateUser, postUserRegenerateKey } from '@/services/yuapi-backend/user';
 import { requestConfig } from '@/requestConfig';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
   
 const { Option } = Select;
+const { Paragraph } = Typography;
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader();
@@ -31,7 +32,6 @@ const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 };
 
 const beforeUpload = (file: RcFile) => {
-  console.log("beforeUpload");
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
     message.error('You can only upload JPG/PNG file!');
@@ -40,21 +40,32 @@ const beforeUpload = (file: RcFile) => {
   if (!isLt3M) {
     message.error('Image must smaller than 2MB!');
   }
-  console.log("isJpgOrPng",isJpgOrPng);
-  console.log("isLt3M",isLt3M);
   return isJpgOrPng && isLt3M;
 };
   
 const Index: React.FC = () => {
     const [loading, setLoading] = useState(false);
+    const [data, setData] = useState<API.UserDevKeyResponse>();
     const [updateModalShow, setUpdateModalShow] = useState<boolean>(false);
     const { initialState, setInitialState } = useModel('@@initialState');
     const { loginUser } = initialState || {};
     const [imageUrl, setImageUrl] =  useState<string | null>(loginUser?.userAvatar ? `${requestConfig.baseURL}/${loginUser.userAvatar}` : null);
     
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const res = await getUserGetKey();
+        // console.log(res);
+        // console.log(res.data);
+        setData(res.data);
+      } catch (e: any) {
+        message.error('获取数据失败，' + e.message);
+      }
+      setLoading(false);
+      return;
+    };
+
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-      
-      console.log("handleChange",info);
       if (info.file.status === 'uploading') {
         setLoading(true);
         return;
@@ -67,6 +78,19 @@ const Index: React.FC = () => {
         });
         location.reload();
       }
+    };
+
+    const genKey = async () => {
+      try {
+        const res = await postUserRegenerateKey();
+        setData(res.data);
+      } catch (e: any) {
+        message.error('获取数据失败，' + e.message);
+      }
+    };
+
+    const showDevKey = () => {
+      loadData();
     };
 
     const formItemLayout = {
@@ -153,14 +177,14 @@ const Index: React.FC = () => {
               description={'User Account: ' + loginUser?.userAccount?? null}
             />
           </Card>
-          {/* <Card
-            title="开发者密钥（调用接口的凭证）"
+          <Card
+            title="Developer key (Keys for invoking the interface)"
             extra={
                 <>
                 <Space>
-                    <Button onClick={getSdk}>下载SDK</Button>
-                    <Button onClick={showDevKey}>显示密钥</Button>
-                    <Button onClick={genKey}>重新生成</Button>
+                    {/* <Button onClick={getSdk}>下载SDK</Button> */}
+                    <Button onClick={showDevKey}>Show Key</Button>
+                    <Button onClick={genKey}>Regenerate Key</Button>
                 </Space>
                 </>
             }
@@ -177,7 +201,7 @@ const Index: React.FC = () => {
                 </Paragraph>
                 </Descriptions.Item>
             </Descriptions>
-          </Card> */}
+          </Card>
   
           
         </Space>
