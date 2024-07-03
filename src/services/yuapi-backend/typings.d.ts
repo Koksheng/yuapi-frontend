@@ -170,6 +170,7 @@ declare namespace API {
     method?: string;
     createTime?: string;
     updateTime?: string;
+    userInterfaceInfoRemainingCount?: number;
   };
 
   type InterfaceInfoSafetyResponseBaseResponse = {
@@ -232,6 +233,12 @@ declare namespace API {
     data?: string;
     message?: string;
     description?: string;
+  };
+
+  type UpdateFreeTrialUserInterfaceInfoRequest = {
+    userId?: number;
+    interfaceInfoId?: number;
+    lockNum?: number;
   };
 
   type UpdateInterfaceInfoRequest = {

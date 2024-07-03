@@ -5,6 +5,7 @@ import { Card, List, Skeleton, message, theme, Descriptions, Button, Form, Input
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { postUserInterfaceInfoGetFreeTrialUserInterfaceInfo } from '@/services/yuapi-backend/userInterfaceInfo';
 
 /*
 * 主页
@@ -15,6 +16,8 @@ const Index: React.FC = () => {
   const [invokeRes, setInvokeRes] = useState<any>();
   const [invokeLoading, setInvokeLoading] = useState(false);
   const params = useParams();
+  const { initialState, setInitialState } = useModel('@@initialState');
+  const { loginUser } = initialState;
 
   const loadData = async () => {
     if(!params.id){
@@ -56,13 +59,39 @@ const Index: React.FC = () => {
     setInvokeLoading(false);
   };
 
+  const getFreeInterface = async () => {
+    setInvokeLoading(true);
+    try {
+        // console.log("loginUser.id",loginUser.id);
+        // console.log("data?.id",data?.id);
+        const res = await postUserInterfaceInfoGetFreeTrialUserInterfaceInfo({
+            userId: loginUser.id,
+            interfaceInfoId: data?.id,
+            lockNum: 5,
+        });
+        if (res.data) {
+            message.success('Get Free Trial successfully.');
+        } else {
+            message.error('Failed to get Free Trial, please try again.');
+        }
+    } catch (e:any) {
+      message.error('Request Failed, ' + e.message);
+    }
+    setInvokeLoading(false);
+    loadData();
+    return
+  };
+
   return (
     <PageContainer title="View Interface Info">
         <Card>
             {data ? (
-                <Descriptions title={data.name} column={1}>
+                <Descriptions title={data.name} column={1} extra={
+                      <Button onClick={getFreeInterface}>Free Trial</Button>
+                  }>
                     <DescriptionsItem label="Status">{data.status ? 'On' : 'Off'}</DescriptionsItem>
                     <DescriptionsItem label="Description">{data.description}</DescriptionsItem>
+                    <Descriptions.Item label="Remaining invoke times">{data.userInterfaceInfoRemainingCount}</Descriptions.Item>
                     <DescriptionsItem label="Url">{data.url}</DescriptionsItem>
                     <DescriptionsItem label="Method">{data.method}</DescriptionsItem>
                     <DescriptionsItem label="Request Param">{data.requestParams}</DescriptionsItem>

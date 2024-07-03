@@ -32,6 +32,21 @@ export async function postUserInterfaceInfoDeleteUserInterfaceInfo(
   });
 }
 
+/** 此处后端没有提供注释 POST /api/UserInterfaceInfo/getFreeTrialUserInterfaceInfo */
+export async function postUserInterfaceInfoGetFreeTrialUserInterfaceInfo(
+  body: API.UpdateFreeTrialUserInterfaceInfoRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.Int32BaseResponse>('/api/UserInterfaceInfo/getFreeTrialUserInterfaceInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 GET /api/UserInterfaceInfo/getUserInterfaceInfoById */
 export async function getUserInterfaceInfoGetUserInterfaceInfoById(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
