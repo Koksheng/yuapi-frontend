@@ -106,10 +106,10 @@ export const requestConfig: RequestConfig = {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
       console.log('data',data);
-      if (data?.code !== 0) {
-        throw new Error('响应错误' + data.title);
-        // message.error('请求失败！');
-      }
+      // if (data?.code !== 0) {
+      //   throw new Error('响应错误' + data.title);
+      //   // message.error('请求失败！');
+      // }
       return response;
     },
   ],

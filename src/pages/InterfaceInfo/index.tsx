@@ -51,12 +51,21 @@ const Index: React.FC = () => {
             id: params.id,
             ...values,
         });
-        setInvokeRes(res.data);
-        message.success("Invoke successfully");
+        // console.log("res",res);
+        if(res.code == 0){
+            setInvokeRes(res.data);
+            message.success("Invoke successfully");
+        }
+        else{
+            setInvokeRes("Invoke failed. " + res.message);
+            message.error("Invoke failed. " + res.message);
+        }
+        
     } catch(error: any){
         message.error('Invoke failed, please try again'+ error.response.data.title);
     }
     setInvokeLoading(false);
+    loadData();
   };
 
   const getFreeInterface = async () => {
