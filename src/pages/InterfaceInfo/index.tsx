@@ -40,6 +40,12 @@ const Index: React.FC = () => {
     loadData();
   },[]);
 
+  // Utility function to check if a string is base64 encoded
+    const isBase64String = (str: string) => {
+        const base64Regex = /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
+        return base64Regex.test(str);
+    };
+
   const onFinish = async (values: any) => {
     if(!params.id){
         message.error('Params not exists.');
@@ -51,9 +57,10 @@ const Index: React.FC = () => {
             id: params.id,
             ...values,
         });
-        // console.log("res",res);
+        console.log("res",res);
         if(res.code == 0){
-            setInvokeRes(res.data);
+            const isBase64 = isBase64String(res.data);
+            setInvokeRes({ data: res.data, isBase64 });
             message.success("Invoke successfully");
         }
         else{
@@ -136,7 +143,11 @@ const Index: React.FC = () => {
         </Card>
         <Divider></Divider>
         <Card title="Test Result" loading={invokeLoading}>
-            {invokeRes}
+            {invokeRes?.isBase64 ? (
+                <img src={`data:image/jpeg;base64,${invokeRes.data}`} alt="Result Image" style={{ maxWidth: '100%' }} />
+            ) : (
+                <pre>{invokeRes?.data}</pre>
+            )}
         </Card>
     </PageContainer>
   );
