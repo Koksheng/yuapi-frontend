@@ -55,7 +55,7 @@ export async function postInterfaceInfoInvokeInterfaceInfo(
   body: API.InvokeInterfaceInfoRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.StringBaseResponse>('/api/InterfaceInfo/invokeInterfaceInfo', {
+  return request<API.ObjectBaseResponse>('/api/InterfaceInfo/invokeInterfaceInfo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

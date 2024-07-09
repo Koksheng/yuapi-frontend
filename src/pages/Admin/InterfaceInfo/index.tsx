@@ -215,6 +215,11 @@ const TableList: React.FC = () => {
       dataIndex: 'responseHeader',
       valueType: 'jsonCode',
     },
+    {
+      title: 'Parameter Example',
+      dataIndex: 'parameterExample',
+      valueType: 'jsonCode',
+    },
 
     {
       title: 'Status', //状态

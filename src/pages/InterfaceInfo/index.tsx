@@ -1,7 +1,7 @@
 import { getInterfaceInfoGetInterfaceInfoById, postInterfaceInfoInvokeInterfaceInfo } from '@/services/yuapi-backend/interfaceInfo';
 import { PageContainer } from '@ant-design/pro-components';
-import { useMatch, useModel, useParams } from '@umijs/max';
-import { Card, List, Skeleton, message, theme, Descriptions, Button, Form, Input, Spin, Divider } from 'antd';
+import { useModel, useParams } from '@umijs/max';
+import { Card, message, Descriptions, Button, Form, Input, Divider } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
@@ -18,6 +18,8 @@ const Index: React.FC = () => {
   const params = useParams();
   const { initialState, setInitialState } = useModel('@@initialState');
   const { loginUser } = initialState;
+
+//   const [form] = Form.useForm();
 
   const loadData = async () => {
     if(!params.id){
@@ -39,6 +41,12 @@ const Index: React.FC = () => {
   useEffect(()=>{
     loadData();
   },[]);
+
+//   useEffect(() => {
+//     if (data) {
+//       form.setFieldsValue({ userRequestParams: data.parameterExample });
+//     }
+//   }, [data]);
 
   // Utility function to check if a string is base64 encoded
     const isBase64String = (str: string) => {
@@ -113,6 +121,7 @@ const Index: React.FC = () => {
                     <DescriptionsItem label="Request Param">{data.requestParams}</DescriptionsItem>
                     <DescriptionsItem label="Request Header">{data.requestHeader}</DescriptionsItem>
                     <DescriptionsItem label="Response Header">{data.responseHeader}</DescriptionsItem>
+                    {/* <DescriptionsItem label="parameterExample">{data.parameterExample}</DescriptionsItem> */}
                     <DescriptionsItem label="Create Time">{moment(data.createTime).format('YYYY-MM-DD HH:mm:ss')}</DescriptionsItem>
                     <DescriptionsItem label="Update Time">{moment(data.updateTime).format('YYYY-MM-DD HH:mm:ss')}</DescriptionsItem>
                 </Descriptions>
@@ -123,13 +132,15 @@ const Index: React.FC = () => {
         <Divider></Divider>
         <Card title="Test Now">
             <Form
+                // form={form}
                 name="invoke"
                 layout='vertical'
                 onFinish={onFinish}
+                initialValues={{userRequestParams:data?.parameterExample}} // Initial values are set here
             >
                 <Form.Item
                     label="Request Param"
-                    name="userrequestParams"
+                    name="userRequestParams"
                 >
                     <Input.TextArea />
                 </Form.Item>

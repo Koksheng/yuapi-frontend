@@ -166,6 +166,7 @@ declare namespace API {
     requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
+    parameterExample?: string;
     status?: number;
     method?: string;
     createTime?: string;
@@ -228,9 +229,9 @@ declare namespace API {
     userRequestParams?: string;
   };
 
-  type StringBaseResponse = {
+  type ObjectBaseResponse = {
     code?: number;
-    data?: string;
+    data?: any;
     message?: string;
     description?: string;
   };
@@ -249,6 +250,7 @@ declare namespace API {
     requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
+    parameterExample?: string;
     method?: string;
   };
 
